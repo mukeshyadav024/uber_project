@@ -1,4 +1,6 @@
-# User Registration Endpoint Documentation
+
+
+# User Registration & Login Endpoint Documentation
 
 ## POST `/user/register`
 
@@ -70,6 +72,70 @@ Send a JSON object with the following structure:
       "location": "body"
     }
   ]
+}
+```
+
+---
+
+## POST `/user/login`
+
+### Description
+This endpoint allows an existing user to log in using their email and password. On successful authentication, it returns a JWT token and the user object.
+
+---
+
+### Request Body
+
+Send a JSON object with the following structure:
+
+```json
+{
+  "email": "john.doe@example.com",
+  "password": "yourpassword"
+}
+```
+
+#### Field Requirements
+
+- `email` (string, required): Must be a valid email address.
+- `password` (string, required): Minimum 6 characters.
+
+---
+
+### Status Codes
+
+- **200 OK**: User logged in successfully.
+- **400 Bad Request**: Validation failed (missing or invalid fields).
+- **401 Unauthorized**: Incorrect email or password.
+- **500 Internal Server Error**: Server error during login.
+
+---
+
+### Example Successful Response
+
+```json
+{
+  "message": "User logged in successfully",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "user": {
+    "_id": "6626f2e1b7e1c2a1b8e4d123",
+    "fullname": {
+      "firstname": "John",
+      "lastname": "Doe"
+    },
+    "email": "john.doe@example.com",
+    "socketID": null
+  }
+}
+```
+
+---
+
+### Example Error Response
+
+```json
+{
+  "error": "Incorrect email or password"
 }
 ```
 
