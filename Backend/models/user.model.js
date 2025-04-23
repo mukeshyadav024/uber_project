@@ -32,12 +32,14 @@ const userSchema= new mongoose.Schema({
 
 userSchema.methods.generateAuthToken = function () {
     const user = this;
-    const token = jwt.sign({ _id: user._id}, process.env.JWT_SECRET);
+    const token = jwt.sign({ _id: user._id}, process.env.JWT_SECRET,{
+        expiresIn: '24h' // Token will expire after 24 hour
+    });
     return token;
 }
 
 userSchema.statics.hashPassword = async function (password) {
-    console.log("called hash password ");
+    // console.log("called hash password ");
     
     const hashedPassword = await bcrypt.hash(password, 10);
     return hashedPassword;
