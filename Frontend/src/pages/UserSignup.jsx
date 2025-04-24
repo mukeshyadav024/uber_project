@@ -1,28 +1,57 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, {  useContext, useState } from 'react'
+import { Link, useNavigate} from 'react-router-dom'
+import axios from 'axios'
+import {UserContextData} from '../context/UserContext'
 
 const UserSignup = () => {
     const [firstname, setFirstname] = useState("");
     const [lastname, setLastname] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [userData, setUserData] = useState({});
 
-    const submitHandler = (e) => {
+    const navigate=useNavigate()
+
+const {user,setUser}=useContext(UserContextData)
+
+    const submitHandler = async (e) => {
         e.preventDefault()
-        setUserData({
-            fullname: {
-                firstname: firstname,
-                lastname: lastname,
-            },
-            email: email,
-            password: password
-        })
-        // console.log(userData);
-        setFirstname('')
-        setLastname('')
-        setEmail('')
-        setPassword('')
+      const newuser={
+        fullname: {
+            firstname: firstname,
+            lastname: lastname,
+        },
+        email: email,
+        password: password
+    }
+try{
+
+  const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/user/register`,newuser)
+
+  if(response.status===201){
+      
+    const data = response.data
+    // console.log(data.user);
+    
+     setUser(data.user)
+     localStorage.setItem('token',data.token)
+     navigate('/home')
+   }
+         setFirstname('')
+         setLastname('')
+         setEmail('')
+         setPassword('')
+
+}catch(err){
+  alert(err.response.data.error)  
+  // console.log(err.response.data.error);
+  return
+}
+
+ 
+
+
+    
+ 
 
     }
 
@@ -74,7 +103,7 @@ const UserSignup = () => {
             required
           />
           <button className="bg-[#111] text-white font-semibold mb-4 rounded px-4 py-2 w-full text-lg ">
-            Signup
+            Create Account
           </button>
         </form>
         <p className="text-center">
