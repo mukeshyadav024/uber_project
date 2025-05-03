@@ -1,10 +1,9 @@
-
-
 # User Registration & Login Endpoint Documentation
 
 ## POST `/user/register`
 
 ### Description
+
 This endpoint allows a new user to register by providing their full name, email, and password. On successful registration, the endpoint returns a JWT token and the created user object.
 
 ---
@@ -80,6 +79,7 @@ Send a JSON object with the following structure:
 ## POST `/user/login`
 
 ### Description
+
 This endpoint allows an existing user to log in using their email and password. On successful authentication, it returns a JWT token and the user object.
 
 ---
@@ -155,9 +155,11 @@ Send a JSON object with the following structure:
 Retrieves the profile information of the authenticated user.
 
 #### Authentication
+
 Requires JWT token in Authorization header or cookie.
 
 #### Response
+
 ```json
 {
   "_id": "6626f2e1b7e1c2a1b8e4d123",
@@ -171,6 +173,7 @@ Requires JWT token in Authorization header or cookie.
 ```
 
 #### Status Codes
+
 - **200 OK**: Profile retrieved successfully
 - **401 Unauthorized**: Invalid or missing token
 
@@ -181,9 +184,11 @@ Requires JWT token in Authorization header or cookie.
 Logs out the current user by blacklisting their JWT token.
 
 #### Authentication
+
 Requires JWT token in Authorization header or cookie.
 
 #### Response
+
 ```json
 {
   "message": "User logged out successfully"
@@ -191,6 +196,7 @@ Requires JWT token in Authorization header or cookie.
 ```
 
 #### Status Codes
+
 - **200 OK**: Successfully logged out
 - **401 Unauthorized**: Invalid or missing token
 
@@ -203,6 +209,7 @@ Requires JWT token in Authorization header or cookie.
 Registers a new captain account.
 
 #### Request Body
+
 ```json
 {
   "fullname": {
@@ -221,6 +228,7 @@ Registers a new captain account.
 ```
 
 #### Field Requirements
+
 - `fullname.firstname` (string, required): Captain's first name
 - `fullname.lastname` (string, optional): Captain's last name
 - `email` (string, required): Valid email address
@@ -232,6 +240,7 @@ Registers a new captain account.
   - `capacity` (number, required): Passenger capacity
 
 #### Response
+
 ```json
 {
   "message": "Captain registered successfully",
@@ -254,6 +263,7 @@ Registers a new captain account.
 ```
 
 #### Status Codes
+
 - **201 Created**: Captain registered successfully
 - **400 Bad Request**: Validation errors
 - **409 Conflict**: Email already exists
@@ -265,6 +275,7 @@ Registers a new captain account.
 Authenticates a captain.
 
 #### Request Body
+
 ```json
 {
   "email": "john.captain@example.com",
@@ -273,6 +284,7 @@ Authenticates a captain.
 ```
 
 #### Response
+
 ```json
 {
   "message": "Captain logged in successfully",
@@ -295,6 +307,7 @@ Authenticates a captain.
 ```
 
 #### Status Codes
+
 - **200 OK**: Successfully logged in
 - **401 Unauthorized**: Invalid credentials
 
@@ -305,9 +318,11 @@ Authenticates a captain.
 Retrieves the captain's profile information.
 
 #### Authentication
+
 Requires JWT token in Authorization header or cookie.
 
 #### Response
+
 ```json
 {
   "_id": "6626f2e1b7e1c2a1b8e4d456",
@@ -326,6 +341,7 @@ Requires JWT token in Authorization header or cookie.
 ```
 
 #### Status Codes
+
 - **200 OK**: Profile retrieved successfully
 - **401 Unauthorized**: Invalid or missing token
 
@@ -336,9 +352,11 @@ Requires JWT token in Authorization header or cookie.
 Logs out the current captain by blacklisting their JWT token.
 
 #### Authentication
+
 Requires JWT token in Authorization header or cookie.
 
 #### Response
+
 ```json
 {
   "message": "Captain logged out successfully"
@@ -346,6 +364,7 @@ Requires JWT token in Authorization header or cookie.
 ```
 
 #### Status Codes
+
 - **200 OK**: Successfully logged out
 - **401 Unauthorized**: Invalid or missing token
 
@@ -373,7 +392,7 @@ All endpoints may return these error responses:
 
 or for validation errors:
 
-```json
+````json
 {
   "errors": [
     {
@@ -405,9 +424,10 @@ Requires JWT token in Authorization header or cookie.
   "email": "john.doe@example.com",
   "socketID": null
 }
-```
+````
 
 #### Status Codes
+
 - **200 OK**: Profile retrieved successfully
 - **401 Unauthorized**: Invalid or missing token
 
@@ -418,9 +438,11 @@ Requires JWT token in Authorization header or cookie.
 Logs out the current user by blacklisting their JWT token.
 
 #### Authentication
+
 Requires JWT token in Authorization header or cookie.
 
 #### Response
+
 ```json
 {
   "message": "User logged out successfully"
@@ -428,6 +450,7 @@ Requires JWT token in Authorization header or cookie.
 ```
 
 #### Status Codes
+
 - **200 OK**: Successfully logged out
 - **401 Unauthorized**: Invalid or missing token
 
@@ -440,6 +463,7 @@ Requires JWT token in Authorization header or cookie.
 Registers a new captain account.
 
 #### Request Body
+
 ```json
 {
   "fullname": {
@@ -458,6 +482,7 @@ Registers a new captain account.
 ```
 
 #### Field Requirements
+
 - `fullname.firstname` (string, required): Captain's first name
 - `fullname.lastname` (string, optional): Captain's last name
 - `email` (string, required): Valid email address
@@ -469,6 +494,7 @@ Registers a new captain account.
   - `capacity` (number, required): Passenger capacity
 
 #### Response
+
 ```json
 {
   "message": "Captain registered successfully",
@@ -491,6 +517,7 @@ Registers a new captain account.
 ```
 
 #### Status Codes
+
 - **201 Created**: Captain registered successfully
 - **400 Bad Request**: Validation errors
 - **409 Conflict**: Email already exists
@@ -502,6 +529,7 @@ Registers a new captain account.
 Authenticates a captain.
 
 #### Request Body
+
 ```json
 {
   "email": "john.captain@example.com",
@@ -510,6 +538,7 @@ Authenticates a captain.
 ```
 
 #### Response
+
 ```json
 {
   "message": "Captain logged in successfully",
@@ -532,6 +561,7 @@ Authenticates a captain.
 ```
 
 #### Status Codes
+
 - **200 OK**: Successfully logged in
 - **401 Unauthorized**: Invalid credentials
 
@@ -542,9 +572,11 @@ Authenticates a captain.
 Retrieves the captain's profile information.
 
 #### Authentication
+
 Requires JWT token in Authorization header or cookie.
 
 #### Response
+
 ```json
 {
   "_id": "6626f2e1b7e1c2a1b8e4d456",
@@ -563,6 +595,7 @@ Requires JWT token in Authorization header or cookie.
 ```
 
 #### Status Codes
+
 - **200 OK**: Profile retrieved successfully
 - **401 Unauthorized**: Invalid or missing token
 
@@ -573,9 +606,11 @@ Requires JWT token in Authorization header or cookie.
 Logs out the current captain by blacklisting their JWT token.
 
 #### Authentication
+
 Requires JWT token in Authorization header or cookie.
 
 #### Response
+
 ```json
 {
   "message": "Captain logged out successfully"
@@ -583,6 +618,7 @@ Requires JWT token in Authorization header or cookie.
 ```
 
 #### Status Codes
+
 - **200 OK**: Successfully logged out
 - **401 Unauthorized**: Invalid or missing token
 
@@ -621,3 +657,248 @@ or for validation errors:
   ]
 }
 ```
+
+# Maps & Ride API Documentation
+
+## Maps Endpoints
+
+### GET `/maps/get-suggestion`
+
+#### Description
+
+Returns location autocomplete suggestions for a given input using Google Maps API.
+
+#### Authentication
+
+Requires JWT token in Authorization header or cookie.
+
+#### Query Parameters
+
+| Name  | Type   | Required | Description                |
+| ----- | ------ | -------- | -------------------------- |
+| input | string | Yes      | The partial address string |
+
+#### Example Request
+
+```
+GET /maps/get-suggestion?input=vesu
+Authorization: Bearer <token>
+```
+
+#### Example Response
+
+```json
+[
+  {
+    "description": "Vesu, Surat, Gujarat, India",
+    "place_id": "ChIJd7zN_th4YjkRk8lFzFj2b1g",
+    ...
+  },
+  ...
+]
+```
+
+#### Status Codes
+
+- **200 OK**: Suggestions returned successfully
+- **400 Bad Request**: Missing or invalid input
+- **401 Unauthorized**: Invalid or missing token
+- **422 Unprocessable Entity**: Validation error
+
+---
+
+### GET `/maps/get-Coordinate`
+
+#### Description
+
+Returns latitude and longitude for a given address using Google Maps API.
+
+#### Authentication
+
+Requires JWT token in Authorization header or cookie.
+
+#### Query Parameters
+
+| Name    | Type   | Required | Description        |
+| ------- | ------ | -------- | ------------------ |
+| address | string | Yes      | The address string |
+
+#### Example Request
+
+```
+GET /maps/get-Coordinate?address=vesu%20surat
+Authorization: Bearer <token>
+```
+
+#### Example Response
+
+```json
+{
+  "lati": 21.1411,
+  "longi": 72.7897
+}
+```
+
+#### Status Codes
+
+- **200 OK**: Coordinates returned successfully
+- **400 Bad Request**: Missing or invalid address
+- **401 Unauthorized**: Invalid or missing token
+- **422 Unprocessable Entity**: Validation error
+
+---
+
+### GET `/maps/get-distance-time`
+
+#### Description
+
+Returns the distance and estimated travel time between two addresses using Google Maps API.
+
+#### Authentication
+
+Requires JWT token in Authorization header or cookie.
+
+#### Query Parameters
+
+| Name        | Type   | Required | Description         |
+| ----------- | ------ | -------- | ------------------- |
+| origin      | string | Yes      | Origin address      |
+| destination | string | Yes      | Destination address |
+
+#### Example Request
+
+```
+GET /maps/get-distance-time?origin=vesu%20surat&destination=althan%20surat
+Authorization: Bearer <token>
+```
+
+#### Example Response
+
+```json
+{
+  "distance": {
+    "text": "5.2 km",
+    "value": 5200
+  },
+  "duration": {
+    "text": "15 mins",
+    "value": 900
+  }
+}
+```
+
+#### Status Codes
+
+- **200 OK**: Distance and time returned successfully
+- **400 Bad Request**: Missing or invalid parameters
+- **401 Unauthorized**: Invalid or missing token
+- **422 Unprocessable Entity**: Validation error
+
+---
+
+## Ride Endpoints
+
+### POST `/ride/create`
+
+#### Description
+
+Creates a new ride request with pickup, destination, and vehicle type. Calculates fare, generates OTP, and stores ride in the database.
+
+#### Authentication
+
+Requires JWT token in Authorization header or cookie.
+
+#### Request Body
+
+```json
+{
+  "pickup": "Vesu, Surat, Gujarat",
+  "destination": "Althan, Surat, Gujarat",
+  "vehicleType": "car"
+}
+```
+
+- `pickup` (string, required): Pickup address (min 3 chars)
+- `destination` (string, required): Destination address (min 3 chars)
+- `vehicleType` (string, required): One of `auto`, `car`, `motorcycle`
+
+#### Example Response
+
+```json
+{
+  "message": "Ride created successfully",
+  "ride": {
+    "_id": "6626f2e1b7e1c2a1b8e4d789",
+    "user": "6626f2e1b7e1c2a1b8e4d123",
+    "pickup": "Vesu, Surat, Gujarat",
+    "destination": "Althan, Surat, Gujarat",
+    "fare": 120,
+    "otp": "123456",
+    "status": "pending",
+    ...
+  }
+}
+```
+
+#### Status Codes
+
+- **201 Created**: Ride created successfully
+- **400 Bad Request**: Validation failed (missing or invalid fields)
+- **401 Unauthorized**: Invalid or missing token
+- **500 Internal Server Error**: Server error during ride creation
+
+---
+
+## Notes
+
+- All `/maps` endpoints require authentication.
+- Fare is calculated based on Google Maps distance and time, and vehicle type.
+- OTP is generated for each ride and stored securely.
+- Use the JWT token in the `Authorization` header or as a cookie for all protected routes.
+
+### GET `/ride/get-fare`
+
+#### Description
+
+Calculates and returns the estimated fare for a ride between a pickup and destination address, for all supported vehicle types.
+
+#### Authentication
+
+Requires JWT token in Authorization header or cookie.
+
+#### Query Parameters
+
+| Name        | Type   | Required | Description         |
+| ----------- | ------ | -------- | ------------------- |
+| pickup      | string | Yes      | Pickup address      |
+| destination | string | Yes      | Destination address |
+
+#### Example Request
+
+```
+GET /ride/get-fare?pickup=vesu%20surat&destination=althan%20surat
+Authorization: Bearer <token>
+```
+
+#### Example Response
+
+```json
+{
+  "message": "Fare fetched successfully",
+  "fare": {
+    "auto": 120,
+    "car": 180,
+    "motorcycle": 90
+  }
+}
+```
+
+#### Status Codes
+
+- **200 OK**: Fare calculated successfully
+- **400 Bad Request**: Validation failed (missing or invalid fields)
+- **401 Unauthorized**: Invalid or missing token
+- **500 Internal Server Error**: Server error during fare calculation
+
+---
+
