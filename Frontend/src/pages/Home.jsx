@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import "remixicon/fonts/remixicon.css";
@@ -8,6 +8,8 @@ import VehiclePanel from "../components/VehiclePanel";
 import ConfirmRide from "../components/ConfirmRide";
 import LookingForDriver from "../components/LookingForDriver";
 import WaitingForDriver from "../components/WaitingForDriver";
+import { SocketContext } from "../context/SocketContext";
+import {UserContextData} from "../context/UserContext";
 
 const Home = () => {
   const [pickup, setPickup] = useState("");
@@ -27,8 +29,19 @@ const Home = () => {
     useState(false);
   const [WaitingForDriverPanelOpen, setWaitingForDriverPanelOpen] =
     useState(false);
-    const [fare, setFare] = useState({});
-const [vehicleType, setVehicleType] = useState(null)
+  const [fare, setFare] = useState({});
+  const [vehicleType, setVehicleType] = useState(null);
+
+  const {socket} = useContext(SocketContext)
+  const {user}=useContext(UserContextData)
+
+
+  useEffect(() => {
+    
+    socket.emit("join",{userType:"user",userId:user._id})
+  },[user])
+
+
 
 
 
@@ -86,6 +99,7 @@ const [vehicleType, setVehicleType] = useState(null)
 
   useGSAP(
     function () {
+      if (!panelRef.current) return;
       if (panelOpen) {
         gsap.to(panelRef.current, {
           height: "70%",
@@ -109,6 +123,7 @@ const [vehicleType, setVehicleType] = useState(null)
 
   useGSAP(
     function () {
+      if (!vehiclePanelRef.current) return;
       if (vehiclePanelOpen) {
         gsap.to(vehiclePanelRef.current, {
           transform: "translateY(0)",
@@ -124,6 +139,7 @@ const [vehicleType, setVehicleType] = useState(null)
 
   useGSAP(
     function () {
+      if (!confirmRidePanelRef.current) return;
       if (confirmRidePanelOpen) {
         gsap.to(confirmRidePanelRef.current, {
           transform: "translateY(0)",
@@ -139,6 +155,7 @@ const [vehicleType, setVehicleType] = useState(null)
 
   useGSAP(
     function () {
+      if (!lookingForDriverPanelRef.current) return;
       if (lookingForDriverPanelOpen) {
         gsap.to(lookingForDriverPanelRef.current, {
           transform: "translateY(0)",
@@ -156,6 +173,7 @@ const [vehicleType, setVehicleType] = useState(null)
 
   useGSAP(
     function () {
+      if (!WaitingForDriverPanelRef.current) return;
       if (WaitingForDriverPanelOpen) {
         gsap.to(WaitingForDriverPanelRef.current, {
           transform: "translateY(0)",
@@ -169,7 +187,7 @@ const [vehicleType, setVehicleType] = useState(null)
     [WaitingForDriverPanelOpen]
   );
 
-async  function findTripHandler() {
+  async function findTripHandler() {
     setPanelOpen(false);
     setVehiclePanelOpen(true);
 
@@ -184,12 +202,12 @@ async  function findTripHandler() {
     );
 
     // console.log("Fare response:", response.data.fare);
-    
+
     setFare(response.data.fare);
   }
 
   async function createRide() {
-  const response = await  axios.post(
+    const response = await axios.post(
       `${import.meta.env.VITE_BASE_URL}/ride/create`,
       {
         pickup,
@@ -197,17 +215,13 @@ async  function findTripHandler() {
         vehicleType,
       },
       {
-        headers: {  
-          
+        headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
-  }
-    )
+      }
+    );
     console.log("Ride response:", response.data);
   }
-
-
-
 
   return (
     <div className="h-screen relative overflow-hidden">
@@ -264,14 +278,17 @@ async  function findTripHandler() {
             />
           </form>
           <button
-          onClick={()=>{
-            findTripHandler();
-          }}
-           className="bg-black w-full rounded-lg p-3 py-2 m-2 ml-0 text-white"> Find Trip </button>
+            onClick={() => {
+              findTripHandler();
+            }}
+            className="bg-black w-full rounded-lg p-3 py-2 m-2 ml-0 text-white"
+          >
+            {" "}
+            Find Trip{" "}
+          </button>
         </div>
         <div ref={panelRef} className="h-0 bg-white">
           <LocationSearchPanel
-            
             setPanelOpen={setPanelOpen}
             setVehiclePanelOpen={setVehiclePanelOpen}
             suggestions={suggestions}
@@ -279,45 +296,50 @@ async  function findTripHandler() {
           />
         </div>
       </div>
-     {vehiclePanelOpen && ( <div
-        ref={vehiclePanelRef}
-        className="fixed z-10 w-full translate-y-full bottom-0 bg-white py-10 px-3"
-      >
-        <VehiclePanel
-        setVehicleType={setVehicleType}
-        fare={fare}
-          setConfirmRidePanelOpen={setConfirmRidePanelOpen}
-          setVehiclePanelOpen={setVehiclePanelOpen}
-        />
-      </div>)}
-     {confirmRidePanelOpen && ( <div
-        ref={confirmRidePanelRef}
-        className="fixed z-10 w-full translate-y-full bottom-0 bg-white py-10 px-3"
-      >
-        <ConfirmRide
-        createRide={createRide}
-        pickup={pickup}
-        destination={destination}
-        fare={fare}
-        vehicleType={vehicleType}
-          setConfirmRidePanelOpen={setConfirmRidePanelOpen}
-          setLookingForDriverPanelOpen={setLookingForDriverPanelOpen}
-        />
-      </div>)}
+      {vehiclePanelOpen && (
+        <div
+          ref={vehiclePanelRef}
+          className="fixed z-10 w-full translate-y-full bottom-0 bg-white py-10 px-3"
+        >
+          <VehiclePanel
+            setVehicleType={setVehicleType}
+            fare={fare}
+            setConfirmRidePanelOpen={setConfirmRidePanelOpen}
+            setVehiclePanelOpen={setVehiclePanelOpen}
+          />
+        </div>
+      )}
+      {confirmRidePanelOpen && (
+        <div
+          ref={confirmRidePanelRef}
+          className="fixed z-10 w-full translate-y-full bottom-0 bg-white py-10 px-3"
+        >
+          <ConfirmRide
+            createRide={createRide}
+            pickup={pickup}
+            destination={destination}
+            fare={fare}
+            vehicleType={vehicleType}
+           
+            setConfirmRidePanelOpen={setConfirmRidePanelOpen}
+            setLookingForDriverPanelOpen={setLookingForDriverPanelOpen}
+          />
+        </div>
+      )}
       {lookingForDriverPanelOpen && (
-  <div
-    ref={lookingForDriverPanelRef}
-    className="fixed z-10 w-full bottom-0 bg-white py-10 px-3"
-  >
-    <LookingForDriver
-      pickup={pickup}
-      destination={destination}
-      fare={fare}
-      vehicleType={vehicleType}
-      setLookingForDriverPanelOpen={setLookingForDriverPanelOpen}
-    />
-  </div>
-)}
+        <div
+          ref={lookingForDriverPanelRef}
+          className="fixed z-10 w-full bottom-0 bg-white py-10 px-3"
+        >
+          <LookingForDriver
+            pickup={pickup}
+            destination={destination}
+            fare={fare}
+            vehicleType={vehicleType}
+            setLookingForDriverPanelOpen={setLookingForDriverPanelOpen}
+          />
+        </div>
+      )}
       <div
         ref={WaitingForDriverPanelRef}
         className="fixed z-10 w-full translate-y-full bottom-0 bg-white py-10 px-3"

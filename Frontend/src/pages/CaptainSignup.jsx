@@ -41,8 +41,9 @@ const CaptainSignup = () => {
           if(response.status===201){
               
             const data = response.data
-            // console.log(data.captain);
             
+            // console.log(data.captain);
+          
              setCaptain(data.captain)
              localStorage.setItem('token',data.token)
              navigate('/captain-home')

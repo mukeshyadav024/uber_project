@@ -1,10 +1,11 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { UserContextData } from '../context/UserContext';
 
 const UserProtectedWrapper = ({ children }) => {
   const navigate = useNavigate();
-  const [user, setUser] = useState(null);
+  const {setUser}= useContext(UserContextData); // ✅ useContext to get user data
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -22,7 +23,7 @@ const UserProtectedWrapper = ({ children }) => {
     })
       .then((response) => {
         if (response.status === 200) {
-          setUser(response.data.user); // ✅ changed from `captain` to `user`
+          setUser(response.data); // ✅ changed from `captain` to `user`
           setIsLoading(false); // stop loader
         } else {
           localStorage.removeItem('token');

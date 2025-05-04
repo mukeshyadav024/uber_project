@@ -1,10 +1,12 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { CaptainContextData } from '../context/CaptainContext';
 
 const CaptainProtectedWrapper = ({ children }) => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
+  const {setCaptain} =useContext( CaptainContextData)
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -22,6 +24,9 @@ const CaptainProtectedWrapper = ({ children }) => {
       .then((response) => {
         if (response.status === 200) {
           setIsLoading(false); // Allow access
+          // console.log("protectedddddd",response.data);
+          
+          setCaptain(response.data); // Set captain data if needed
         } else {
           localStorage.removeItem('token');
           navigate('/captain-login');
