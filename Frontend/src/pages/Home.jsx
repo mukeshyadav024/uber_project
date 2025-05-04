@@ -11,6 +11,7 @@ import WaitingForDriver from "../components/WaitingForDriver";
 import { SocketContext } from "../context/SocketContext";
 import {UserContextData} from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
+import LiveTracking from "../components/LiveTracking";
 
 
 const Home = () => {
@@ -242,20 +243,16 @@ const Home = () => {
   return (
     <div className="h-screen relative overflow-hidden">
       <img
-        className="w-16 absolute left-5 top-5"
+        className="w-16 absolute left-5 top-16 z-10 "
         src="https://upload.wikimedia.org/wikipedia/commons/5/58/Uber_logo_2018.svg"
         alt=""
       />
       <div className="h-screen w-screen ">
         {/* image for map */}
-        <img
-          className="h-full w-full object-cover"
-          src="https://www.researchgate.net/publication/323759986/figure/fig3/AS:631576123682823@1527590890164/Map-in-Uber-application-tracking-user-in-a-Yellow-Cab.png"
-          alt=""
-        />
+        <LiveTracking />
       </div>
       <div className="flex flex-col justify-end h-screen absolute top-0 w-full">
-        <div className="h-[30%] bg-white p-6 relative">
+        <div className="h-[30%] bg-white p-6 relative z-10">
           <h5
             ref={panelCloseRef}
             onClick={() => {

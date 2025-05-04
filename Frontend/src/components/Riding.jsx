@@ -1,24 +1,32 @@
-import React from 'react'
-import { Link } from 'react-router-dom';
+import React, { useContext, useEffect } from 'react'
+import { Link, useNavigate } from 'react-router-dom';
 import { useLocation } from "react-router-dom";
+import { SocketContext } from '../context/SocketContext';
+import LiveTracking from './LiveTracking';
+
 
 const Riding = () => {
   const location = useLocation();
-  const ride = location.state.ride;
+  const ride = location.state?.ride;
   // console.log(ride);
+  const {socket}=useContext(SocketContext)
+  const navigate = useNavigate()
+
+  socket.on('ride-ended',()=>{
+    navigate('/home')
+  })
+
+
   
+
   return (
    <div className='h-screen'>
-    <Link to='/home' className='fixed right-2 top-2 rounded-full flex h-10 w-10 bg-white items-center justify-center'>
+    <Link to='/home' className='fixed z-10  right-2 top-14 rounded-full flex h-10 w-10 bg-white items-center justify-center'>
         <i className="text-lg font-medium ri-home-5-line"></i>
     </Link>
 
      <div className='h-1/2'>
-         <img
-          className="h-full w-full object-cover"
-          src="https://www.researchgate.net/publication/323759986/figure/fig3/AS:631576123682823@1527590890164/Map-in-Uber-application-tracking-user-in-a-Yellow-Cab.png"
-          alt=""
-        />
+     <LiveTracking />
     </div>
     <div className='h-1/2 p-4'>
     <div className='flex items-center justify-between'>
