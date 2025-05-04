@@ -1,35 +1,81 @@
 const rideService = require("../services/ride.service");
 const { validationResult } = require("express-validator");
+const mapsService = require("../services/maps.service");
+const {sendMessageToSocketId} = require("../socket");
+const rideModel = require("../models/ride.model");
 
 module.exports.createRide = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
+  const { pickup, destination, vehicleType, otp } = req.body;
+  if (!pickup || !destination || !vehicleType) {
+    return res.status(400).json({
+      message: "User ID, pickup, destination, and vehicle type are required",
+    });
+  }
+
   try {
-    const { pickup, destination, vehicleType,otp } = req.body;
-    // console.log("pppppp", pickup, destination, vehicleType);
-    // console.log("User ID:", req.user._id); // Log the user ID
-
-    // Validate input
-    if (!pickup || !destination || !vehicleType) {
-      return res.status(400).json({
-        message: "User ID, pickup, destination, and vehicle type are required",
-      });
-    }
-
     // Create ride
     const ride = await rideService.createRide({
-      user: "680a3fc807357c4620dda61d",
-      pickup: pickup,
-      destination: destination,
-      vehicleType: vehicleType,
-      otp:otp
+      user: req.user._id,
+      pickup,
+      destination,
+      vehicleType,
+      otp,
     });
 
-    return res.status(201).json({ message: "Ride created successfully", ride });
+    const pickupCoordinates = await mapsService.getAddressCoordinate(pickup);
+    // console.log("pickupCoordinates", pickupCoordinates);
+    if (
+      !pickupCoordinates ||
+      typeof pickupCoordinates.ltd !== "number" ||
+      typeof pickupCoordinates.lng !== "number"
+    ) {
+      return res.status(404).json({ message: "pickup coordinates not found or invalid" });
+    }
+    // console.log("pickupCoordinates 2", pickupCoordinates);
+    
+    const captainsInRadius = await mapsService.getCaptainsInTheRadius(
+      pickupCoordinates.ltd,
+      pickupCoordinates.lng,
+      2000
+    );
+    
+    // console.log("captainsInRadius", captainsInRadius);
+
+    if (captainsInRadius.length === 0) {
+      return res.status(404).json({ message: "No captains available in your area" });
+    }
+    ride.otp="";
+   
+    const rideWithUser = await rideModel.findOne({ _id: ride._id }).populate("user");
+// console.log("rideWithUser", rideWithUser);
+
+    captainsInRadius.map(captain=>{
+
+      // console.log("captain", captain);
+      // console.log("Ride", ride);
+
+      const captainSocketId = captain.socketID;
+      if (captainSocketId) {
+            sendMessageToSocketId(captainSocketId, {
+              event: "New-ride",
+              data: rideWithUser,
+            });
+          }
+
+    })
+      
+
+    
+
+    // Only send response after all checks pass
+    res.status(201).json({ message: "Ride created successfully", ride, captainsInRadius });
+
   } catch (error) {
-    // console.error("Error creating ride:", error);
+    console.error("Error in createRide:", error);
     return res.status(500).json({ message: "Internal server error" });
   }
 };
