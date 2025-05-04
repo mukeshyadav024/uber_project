@@ -8,6 +8,7 @@ import ConfirmRidePopup from '../components/ConfirmRidePopup';
 import { useEffect } from 'react';
 import { SocketContext } from '../context/SocketContext';
 import { CaptainContextData } from '../context/CaptainContext';
+import axios from "axios";
 
 const CaptainHome = () => {
 
@@ -62,7 +63,7 @@ useEffect(()=>{
 
 // console.log("home");
 socket.on('New-ride', (data) => {
-  console.log('New ride request:', data);
+  // console.log('New ride request:', data);
   setRide(data)
   setRidePopupPanelOpen(true)
   
@@ -70,14 +71,25 @@ socket.on('New-ride', (data) => {
 
 ////change this in future
 
-// async function confirmRide() {
-//   socket.emit('confirm-ride', { 
-//     rideId: ride._id,
-//     userId: captain._id
-//   })
-//   setConfirmRidePopupPanelOpen(true)
-//   setRidePopupPanelOpen(false)
-// }
+async function confirmRide() {
+
+  // console.log("confuirm ride calling .....");
+  
+
+  const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/ride/confirm`,{
+    rideId:ride._id,
+    captainId:captain._id
+  },{
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
+  })
+  // console.log("res",response);
+  
+
+  setConfirmRidePopupPanelOpen(true)
+  setRidePopupPanelOpen(false)
+}
 
 
 useGSAP(function(){
@@ -127,7 +139,7 @@ useGSAP(function(){
 
     <div ref={ridePopupPanelRef}  className="fixed z-10 w-full translate-y-full bottom-0 bg-white py-10 px-3">
         <RidePopUp 
-      //  confirmRide={confirmRide} ////change this in future
+       confirmRide={confirmRide} ////change this in future
          ride={ride}
         setRidePopupPanelOpen={setRidePopupPanelOpen} setConfirmRidePopupPanelOpen={setConfirmRidePopupPanelOpen} />
       </div>

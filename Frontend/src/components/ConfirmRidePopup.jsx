@@ -1,13 +1,30 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from "axios"
 
 const ConfirmRidePopup = (props) => {
 
     const [otp, setOtp] = useState("")
+    const navigate = useNavigate()
 
-    const submitHandler=()=>{
+    const submitHandler=async(e)=>{
         e.preventDefault()
 
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/ride/start-ride`,{
+            params:{rideId:props.ride._id,
+              otp:otp},
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+              },
+          }
+          )
+
+            if(response.status===200){
+              props.setConfirmRidePopupPanelOpen(false),
+              props.setRidePopupPanelOpen(false)
+                navigate('/captain-riding', { state: { ride: props.ride } })
+            }
+            
     }
 
   return (
@@ -45,7 +62,7 @@ const ConfirmRidePopup = (props) => {
           <i className="text-lg ri-map-pin-2-fill"></i>
           <div>
             <h3 className="text-lg font-medium">Destination</h3>
-            <p className="text-gray-600 text-sm -mt-1">{props.ride?.destintion}</p>
+            <p className="text-gray-600 text-sm -mt-1">{props.ride?.destination}</p>
           </div>
         </div>
         <div className="flex items-center gap-5 p-3 ">
@@ -58,13 +75,13 @@ const ConfirmRidePopup = (props) => {
       </div>
 
       <div className='mt-6 w-full'>
-        <form onSubmit={(e)=>{
-            submitHandler(e)
-        }}>
+        <form onSubmit={submitHandler}>
             <input value={otp} onChange={(e)=>{setOtp(e.target.value)}} type="text"className="bg-[#eeeeee] px-6 py-4 font-mono text-lg rounded-lg w-full mt-4 mb-3 " placeholder='Enter OTP' />
-        <Link to="/captain-riding" className=" w-full text-lg flex justify-center bg-green-600 text-white font-semibold p-3 rounded-lg">
+        <button 
+       
+        className=" w-full text-lg flex justify-center bg-green-600 text-white font-semibold p-3 rounded-lg">
         Confirm
-      </Link>
+      </button>
       <button  onClick={() => {
         props.setConfirmRidePopupPanelOpen(false);
         props.setRidePopupPanelOpen(false);

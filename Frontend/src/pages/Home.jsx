@@ -10,6 +10,8 @@ import LookingForDriver from "../components/LookingForDriver";
 import WaitingForDriver from "../components/WaitingForDriver";
 import { SocketContext } from "../context/SocketContext";
 import {UserContextData} from "../context/UserContext";
+import { useNavigate } from "react-router-dom";
+
 
 const Home = () => {
   const [pickup, setPickup] = useState("");
@@ -31,9 +33,11 @@ const Home = () => {
     useState(false);
   const [fare, setFare] = useState({});
   const [vehicleType, setVehicleType] = useState(null);
+  const [ride, setRide] = useState(null)
 
   const {socket} = useContext(SocketContext)
   const {user}=useContext(UserContextData)
+  const navigate = useNavigate()
 
 
   useEffect(() => {
@@ -41,6 +45,18 @@ const Home = () => {
     socket.emit("join",{userType:"user",userId:user._id})
   },[user])
 
+  socket.on('ride-confirmed',ride=>{
+    setRide(ride)
+    setWaitingForDriverPanelOpen(true)
+    setLookingForDriverPanelOpen(false)
+    setVehiclePanelOpen(false)
+  })
+
+  socket.on('ride-started',ride=>{
+    setWaitingForDriverPanelOpen(false)
+    navigate('/riding', { state: { ride } })
+    
+  })
 
 
 
@@ -345,6 +361,8 @@ const Home = () => {
         className="fixed z-10 w-full translate-y-full bottom-0 bg-white py-10 px-3"
       >
         <WaitingForDriver
+        ride={ride}
+
           setWaitingForDriverPanelOpen={setWaitingForDriverPanelOpen}
         />
       </div>
