@@ -11,7 +11,6 @@ const LocationSearchPanel = (props) => {
 
   // If suggestions are provided, show them, else fallback to static locations
   const locations = suggestions.length > 0 ? suggestions : [
-    { description: "156, pandesar near ram mandir, surat, gujarat" },
     { description: "12B, Vesu near D-Mart, surat, gujarat" },
     { description: "11DC, Bhestan ambedkar chowki, surat, gujarat" },
     { description: "19, Althan near hanuman mandir, surat, gujarat" },
